@@ -7,7 +7,7 @@ export default function Navbar({ page, onNavigate }) {
   return (
     <nav className="navbar">
       <div className="navbar-brand">
-        <span className="navbar-logo">🥚</span>
+        <span className="navbar-logo-dot" />
         <span className="navbar-title">TomagochiWeb</span>
       </div>
 
@@ -17,19 +17,19 @@ export default function Navbar({ page, onNavigate }) {
           className={`nav-link ${page === "home" ? "active" : ""}`}
           onClick={() => onNavigate?.("home")}
         >
-          🐾 My Pets
+          My Pets
         </button>
         <button
           id="nav-community"
           className={`nav-link ${page === "community" ? "active" : ""}`}
           onClick={() => onNavigate?.("community")}
         >
-          🌍 Community
+          Community
         </button>
       </div>
 
       <div className="navbar-user">
-        <span className="navbar-username">👤 {user?.username}</span>
+        <span className="navbar-username">{user?.username}</span>
         <button id="btn-logout" className="nav-logout" onClick={logout}>
           Sign Out
         </button>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { getCommunityPets } from "../api";
-import { SPECIES_META, getMoodEmoji } from "../constants";
+import { SPECIES_META, getMoodLabel } from "../constants";
 import Navbar from "../components/Navbar";
 import "./CommunityPage.css";
 
@@ -21,16 +21,19 @@ export default function CommunityPage({ onNavigate }) {
 
       <main className="community-main">
         <div className="community-header">
-          <h1>🌍 Community Pets</h1>
-          <p>See all the creatures your friends are raising!</p>
+          <h1>Community Pets</h1>
+          <p>See all the creatures your friends are raising.</p>
         </div>
 
         {loading ? (
-          <div className="community-loading">🔍 Looking for pets...</div>
+          <div className="community-loading">
+            <div className="community-spinner" />
+            <span>Loading pets...</span>
+          </div>
         ) : pets.length === 0 ? (
           <div className="community-empty">
-            <div className="community-empty-icon">🌐</div>
-            <p>No pets in the world yet! Be the first to raise one.</p>
+            <div className="community-empty-icon" />
+            <p>No pets found. Be the first to raise one.</p>
           </div>
         ) : (
           <div className="community-grid">
@@ -51,9 +54,9 @@ export default function CommunityPage({ onNavigate }) {
                       className="cc-type"
                       style={{ background: `${meta.color}22`, color: meta.color }}
                     >
-                      {meta.emoji} {meta.type}
+                      {meta.type}
                     </span>
-                    <span className="cc-mood">{getMoodEmoji(pet)}</span>
+                    <span className="cc-mood">{getMoodLabel(pet)}</span>
                   </div>
 
                   <img
@@ -64,41 +67,31 @@ export default function CommunityPage({ onNavigate }) {
 
                   <div className="cc-info">
                     <h3 className="cc-name">{pet.name}</h3>
-                    <p className="cc-stage">Lv.{pet.level} · {meta.stages[pet.evolution_stage]}</p>
+                    <p className="cc-stage">
+                      Lv.{pet.level} — {meta.stages[pet.evolution_stage]}
+                    </p>
                   </div>
 
                   <div className="cc-stats">
-                    <div className="cc-stat">
-                      <span>🍗</span>
-                      <div className="cc-bar-bg">
-                        <div
-                          className="cc-bar-fill"
-                          style={{ width: `${pet.hunger}%`, background: meta.color }}
-                        />
+                    {[
+                      { label: "Hunger",    value: pet.hunger },
+                      { label: "Happiness", value: pet.happiness },
+                      { label: "Health",    value: pet.health },
+                    ].map(({ label, value }) => (
+                      <div key={label} className="cc-stat">
+                        <span className="cc-stat-label">{label}</span>
+                        <div className="cc-bar-bg">
+                          <div
+                            className="cc-bar-fill"
+                            style={{ width: `${value}%`, background: meta.color }}
+                          />
+                        </div>
                       </div>
-                    </div>
-                    <div className="cc-stat">
-                      <span>💛</span>
-                      <div className="cc-bar-bg">
-                        <div
-                          className="cc-bar-fill"
-                          style={{ width: `${pet.happiness}%`, background: meta.color }}
-                        />
-                      </div>
-                    </div>
-                    <div className="cc-stat">
-                      <span>❤️</span>
-                      <div className="cc-bar-bg">
-                        <div
-                          className="cc-bar-fill"
-                          style={{ width: `${pet.health}%`, background: meta.color }}
-                        />
-                      </div>
-                    </div>
+                    ))}
                   </div>
 
                   {pet.is_sleeping && (
-                    <div className="cc-sleeping">💤 Sleeping</div>
+                    <div className="cc-sleeping">Sleeping</div>
                   )}
                 </div>
               );

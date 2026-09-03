@@ -5,7 +5,7 @@ import "./AuthPage.css";
 
 export default function AuthPage() {
   const { setUser } = useAuth();
-  const [mode, setMode] = useState("login"); // "login" | "register"
+  const [mode, setMode] = useState("login");
   const [form, setForm] = useState({ username: "", email: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -20,7 +20,6 @@ export default function AuthPage() {
     try {
       if (mode === "register") {
         await register(form.username, form.email, form.password);
-        // Auto-login after register
       }
       await login(form.username, form.password);
       const { getMe } = await import("../api");
@@ -37,16 +36,13 @@ export default function AuthPage() {
     <div className="auth-page">
       <div className="auth-bg">
         <div className="auth-stars" />
-        <div className="auth-floating-pet fp1">🔥</div>
-        <div className="auth-floating-pet fp2">💧</div>
-        <div className="auth-floating-pet fp3">🌿</div>
       </div>
 
       <div className="auth-container">
         <div className="auth-logo">
-          <span className="auth-logo-icon">🥚</span>
+          <div className="auth-logo-icon" />
           <h1 className="auth-title">TomagochiWeb</h1>
-          <p className="auth-subtitle">Raise your pocket creature!</p>
+          <p className="auth-subtitle">Raise your virtual companion</p>
         </div>
 
         <div className="auth-tabs">
@@ -111,7 +107,7 @@ export default function AuthPage() {
             />
           </div>
 
-          {error && <div className="auth-error">⚠️ {error}</div>}
+          {error && <div className="auth-error">{error}</div>}
 
           <button
             id="auth-submit"
@@ -119,7 +115,7 @@ export default function AuthPage() {
             className="auth-btn"
             disabled={loading}
           >
-            {loading ? "Loading..." : mode === "login" ? "Enter World 🌍" : "Create Account ✨"}
+            {loading ? "Loading..." : mode === "login" ? "Enter" : "Create Account"}
           </button>
         </form>
       </div>

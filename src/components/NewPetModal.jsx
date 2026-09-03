@@ -4,15 +4,15 @@ import { SPECIES_META } from "../constants";
 import "./NewPetModal.css";
 
 export default function NewPetModal({ onClose, onCreated }) {
-  const [step, setStep] = useState(1); // 1 = choose species, 2 = name
+  const [step, setStep] = useState(1);
   const [selectedSpecies, setSelectedSpecies] = useState(null);
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const handleCreate = async () => {
-    if (!name.trim()) { setError("Give your pet a name!"); return; }
-    if (name.length > 20) { setError("Name too long (max 20 chars)"); return; }
+    if (!name.trim()) { setError("Give your pet a name."); return; }
+    if (name.length > 20) { setError("Name is too long (max 20 characters)."); return; }
     setLoading(true);
     setError("");
     try {
@@ -27,12 +27,12 @@ export default function NewPetModal({ onClose, onCreated }) {
   return (
     <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
       <div className="modal-box">
-        <button id="modal-close" className="modal-close" onClick={onClose}>✕</button>
+        <button id="modal-close" className="modal-close" onClick={onClose}>X</button>
 
         {step === 1 ? (
           <>
             <h2 className="modal-title">Choose Your Companion</h2>
-            <p className="modal-subtitle">Each starter has unique stats and 3 evolution stages</p>
+            <p className="modal-subtitle">Each starter has unique stats and three evolution stages.</p>
 
             <div className="species-grid">
               {[1, 2, 3].map((id) => {
@@ -56,7 +56,7 @@ export default function NewPetModal({ onClose, onCreated }) {
                       className="species-img"
                     />
                     <div className="species-name" style={selected ? { color: meta.color } : {}}>
-                      {meta.emoji} {meta.name}
+                      {meta.name}
                     </div>
                     <div
                       className="species-type"
@@ -68,7 +68,7 @@ export default function NewPetModal({ onClose, onCreated }) {
                     <div className="species-evolutions">
                       {meta.stages.map((stage, i) => (
                         <span key={i} className="stage-pill">
-                          {i === 0 ? "🥚" : i === 1 ? "🌱" : "⭐"} {stage}
+                          Stage {i + 1}: {stage}
                         </span>
                       ))}
                     </div>
@@ -83,13 +83,15 @@ export default function NewPetModal({ onClose, onCreated }) {
               disabled={!selectedSpecies}
               onClick={() => setStep(2)}
             >
-              Choose {selectedSpecies ? SPECIES_META[selectedSpecies].name : "…"} →
+              {selectedSpecies ? `Choose ${SPECIES_META[selectedSpecies].name}` : "Select a species"}
             </button>
           </>
         ) : (
           <>
-            <button className="modal-back" onClick={() => setStep(1)}>← Back</button>
-            <h2 className="modal-title">Name Your {SPECIES_META[selectedSpecies].emoji} {SPECIES_META[selectedSpecies].name}</h2>
+            <button className="modal-back" onClick={() => setStep(1)}>Back</button>
+            <h2 className="modal-title">
+              Name Your {SPECIES_META[selectedSpecies].name}
+            </h2>
 
             <div className="chosen-preview">
               <img
@@ -114,16 +116,18 @@ export default function NewPetModal({ onClose, onCreated }) {
               <span className="name-counter">{name.length}/20</span>
             </div>
 
-            {error && <div className="modal-error">⚠️ {error}</div>}
+            {error && <div className="modal-error">{error}</div>}
 
             <button
               id="btn-confirm-pet"
               className="modal-btn"
-              style={{ background: `linear-gradient(135deg, ${SPECIES_META[selectedSpecies].color}, ${SPECIES_META[selectedSpecies].color}99)` }}
+              style={{
+                background: `linear-gradient(135deg, ${SPECIES_META[selectedSpecies].color}, ${SPECIES_META[selectedSpecies].color}99)`,
+              }}
               disabled={!name.trim() || loading}
               onClick={handleCreate}
             >
-              {loading ? "Hatching..." : `Hatch ${name || "…"} 🥚`}
+              {loading ? "Creating..." : `Adopt ${name || "..."}`}
             </button>
           </>
         )}

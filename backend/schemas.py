@@ -2,7 +2,6 @@ from pydantic import BaseModel
 from datetime import datetime
 
 
-# ── Auth ───────────────────────────────────────────────────────────────────────
 class UserCreate(BaseModel):
     username: str
     email: str
@@ -28,10 +27,9 @@ class Token(BaseModel):
     token_type: str
 
 
-# ── Pet ────────────────────────────────────────────────────────────────────────
 class PetCreate(BaseModel):
     name: str
-    species_id: int  # 1=Flambit, 2=Aquapup, 3=Leafling
+    species_id: int
 
 
 class PetOut(BaseModel):
@@ -55,4 +53,4 @@ class PetOut(BaseModel):
 
 
 class PetAction(BaseModel):
-    action: str  # "feed", "play", "sleep", "wake"
+    action: str

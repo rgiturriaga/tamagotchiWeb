@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { getMyPets, petAction, deletePet } from "../api";
 import { useAuth } from "../context/AuthContext";
-import { SPECIES_META, getStatColor, getMoodEmoji } from "../constants";
+import { SPECIES_META, getMoodLabel } from "../constants";
 import NewPetModal from "../components/NewPetModal";
 import PetCard from "../components/PetCard";
 import Navbar from "../components/Navbar";
@@ -31,7 +31,7 @@ export default function HomePage({ page, onNavigate }) {
 
   useEffect(() => {
     loadPets();
-    const interval = setInterval(loadPets, 30000); // refresh every 30s
+    const interval = setInterval(loadPets, 30000);
     return () => clearInterval(interval);
   }, [loadPets]);
 
@@ -48,7 +48,7 @@ export default function HomePage({ page, onNavigate }) {
   };
 
   const handleDelete = async (petId) => {
-    if (!confirm("Are you sure? Your pet will be gone forever! 💔")) return;
+    if (!confirm("Are you sure? This action cannot be undone.")) return;
     try {
       await deletePet(petId);
       setPets((prev) => prev.filter((p) => p.id !== petId));
@@ -70,7 +70,6 @@ export default function HomePage({ page, onNavigate }) {
     <div className="home-page">
       <Navbar page={page || "home"} onNavigate={onNavigate} />
 
-      {/* Action message toast */}
       {actionMsg && (
         <div className={`toast toast-${actionMsg.type}`}>
           {actionMsg.text}
@@ -80,25 +79,24 @@ export default function HomePage({ page, onNavigate }) {
       <main className="home-main">
         {loading ? (
           <div className="loading-screen">
-            <div className="loading-egg">🥚</div>
+            <div className="loading-spinner" />
             <p>Loading your pets...</p>
           </div>
         ) : pets.length === 0 ? (
           <div className="empty-state">
-            <div className="empty-egg-anim">🥚</div>
-            <h2>No pets yet, {user?.username}!</h2>
+            <div className="empty-icon" />
+            <h2>No pets yet, {user?.username}.</h2>
             <p>Choose your first companion to begin your journey.</p>
             <button
               id="btn-adopt-first"
               className="btn-primary"
               onClick={() => setShowNewPet(true)}
             >
-              ✨ Adopt a Pet
+              Adopt a Pet
             </button>
           </div>
         ) : (
           <div className="home-layout">
-            {/* Pet selector sidebar */}
             <aside className="pet-sidebar">
               <h3 className="sidebar-title">My Pets</h3>
               <div className="pet-list">
@@ -112,12 +110,14 @@ export default function HomePage({ page, onNavigate }) {
                       style={activePet === pet.id ? { borderColor: meta.color, color: meta.color } : {}}
                       onClick={() => setActivePet(pet.id)}
                     >
-                      <span className="pet-tab-emoji">{meta.emoji}</span>
+                      <div className="pet-tab-dot" style={{ background: meta.color }} />
                       <div className="pet-tab-info">
                         <span className="pet-tab-name">{pet.name}</span>
-                        <span className="pet-tab-species">Lv.{pet.level} {meta.stages[pet.evolution_stage]}</span>
+                        <span className="pet-tab-species">
+                          Lv.{pet.level} {meta.stages[pet.evolution_stage]}
+                        </span>
                       </div>
-                      <span className="pet-tab-mood">{getMoodEmoji(pet)}</span>
+                      <span className="pet-tab-mood">{getMoodLabel(pet)}</span>
                     </button>
                   );
                 })}
@@ -134,7 +134,6 @@ export default function HomePage({ page, onNavigate }) {
               )}
             </aside>
 
-            {/* Main pet view */}
             {selectedPet && (
               <PetCard
                 pet={selectedPet}

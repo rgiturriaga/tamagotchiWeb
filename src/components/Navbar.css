@@ -19,7 +19,13 @@
   text-decoration: none;
 }
 
-.navbar-logo { font-size: 1.5rem; }
+.navbar-logo-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FF6B35, #FF8C42);
+  flex-shrink: 0;
+}
 
 .navbar-title {
   font-size: 0.65rem;

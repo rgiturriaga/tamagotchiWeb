@@ -14,7 +14,6 @@ from .auth import (
 from .game_logic import apply_time_decay, perform_action, SPECIES
 from .websocket_manager import manager
 
-# Create tables
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="TomagochiWeb API", version="1.0.0")
@@ -28,7 +27,6 @@ app.add_middleware(
 )
 
 
-# ── Auth Routes ────────────────────────────────────────────────────────────────
 @app.post("/api/auth/register", response_model=schemas.UserOut)
 def register(user_data: schemas.UserCreate, db: Session = Depends(get_db)):
     if db.query(models.User).filter(models.User.username == user_data.username).first():
@@ -36,11 +34,10 @@ def register(user_data: schemas.UserCreate, db: Session = Depends(get_db)):
     if db.query(models.User).filter(models.User.email == user_data.email).first():
         raise HTTPException(status_code=400, detail="Email already registered")
 
-    hashed = get_password_hash(user_data.password)
     user = models.User(
         username=user_data.username,
         email=user_data.email,
-        hashed_password=hashed,
+        hashed_password=get_password_hash(user_data.password),
     )
     db.add(user)
     db.commit()
@@ -66,7 +63,6 @@ def get_me(current_user: models.User = Depends(get_current_user)):
     return current_user
 
 
-# ── Pet Routes ─────────────────────────────────────────────────────────────────
 @app.post("/api/pets", response_model=schemas.PetOut)
 def create_pet(
     pet_data: schemas.PetCreate,
@@ -76,7 +72,6 @@ def create_pet(
     if pet_data.species_id not in SPECIES:
         raise HTTPException(status_code=400, detail="Invalid species ID")
 
-    # Reload the relationship so len() is accurate
     db.refresh(current_user)
     if len(current_user.pets) >= 3:
         raise HTTPException(status_code=400, detail="You can have at most 3 pets")
@@ -136,7 +131,6 @@ def pet_action(
 
     pet_data = schemas.PetOut.model_validate(pet).model_dump(mode="json")
 
-    # Push update over WebSocket in the background (non-blocking)
     background_tasks.add_task(
         manager.send_pet_update,
         current_user.id,
@@ -163,27 +157,21 @@ def delete_pet(
     return {"message": "Pet deleted"}
 
 
-# ── Community (view all pets) ──────────────────────────────────────────────────
 @app.get("/api/community", response_model=List[schemas.PetOut])
 def get_community_pets(db: Session = Depends(get_db)):
-    """Get all alive pets from all users (for the community page)."""
-    pets = db.query(models.Pet).filter(models.Pet.is_alive.is_(True)).all()
-    return pets
+    return db.query(models.Pet).filter(models.Pet.is_alive.is_(True)).all()
 
 
-# ── Species Info ───────────────────────────────────────────────────────────────
 @app.get("/api/species")
 def get_species():
     return SPECIES
 
 
-# ── WebSocket ──────────────────────────────────────────────────────────────────
 @app.websocket("/ws/{user_id}")
 async def websocket_endpoint(websocket: WebSocket, user_id: int):
     await manager.connect(websocket, user_id)
     try:
         while True:
-            # Keep connection alive; send ping every 30 s
             await asyncio.sleep(30)
             await websocket.send_json({"type": "ping"})
     except WebSocketDisconnect:

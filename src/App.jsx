@@ -18,15 +18,20 @@ function AppContent() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          color: "#fff",
-          fontFamily: "'Press Start 2P', monospace",
-          fontSize: "0.7rem",
           flexDirection: "column",
-          gap: "1rem",
+          gap: "1.5rem",
         }}
       >
-        <div style={{ fontSize: "4rem", animation: "spin 1s linear infinite" }}>🥚</div>
-        <span>Loading...</span>
+        <div
+          style={{
+            width: "3rem",
+            height: "3rem",
+            border: "3px solid rgba(255,255,255,0.1)",
+            borderTopColor: "#FF6B35",
+            borderRadius: "50%",
+            animation: "spin 0.8s linear infinite",
+          }}
+        />
       </div>
     );
   }
