@@ -1,0 +1,33 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+build/
+*.db
+*.sqlite3
+
+# Node / Vite
+node_modules/
+dist/
+.parcel-cache/
+
+# Env & secrets
+.env
+.env.local
+.env.*.local
+
+# VS Code (guardamos settings.json pero ignoramos el resto)
+.vscode/*
+!.vscode/settings.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*

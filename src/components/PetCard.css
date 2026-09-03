@@ -1,0 +1,263 @@
+.pet-card {
+  flex: 1;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  backdrop-filter: blur(20px);
+  transition: box-shadow 0.3s ease;
+  max-width: 600px;
+  width: 100%;
+}
+
+.pet-card:hover {
+  box-shadow: 0 0 40px var(--pet-glow, rgba(255,255,255,0.1));
+}
+
+/* Header */
+.pet-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.pet-type-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: 20px;
+  border: 1px solid;
+  font-size: 0.5rem;
+  font-family: 'Press Start 2P', monospace;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.5rem;
+}
+
+.pet-name {
+  font-size: 1.4rem;
+  font-family: 'Press Start 2P', monospace;
+  color: #fff;
+  margin: 0 0 0.3rem;
+}
+
+.pet-stage {
+  font-size: 0.5rem;
+  font-family: 'Press Start 2P', monospace;
+  color: rgba(255,255,255,0.5);
+  margin: 0;
+}
+
+.pet-mood-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.pet-mood-emoji {
+  font-size: 2.5rem;
+  line-height: 1;
+}
+
+.sleeping-badge {
+  font-size: 0.45rem;
+  font-family: 'Press Start 2P', monospace;
+  color: rgba(255,255,255,0.5);
+  background: rgba(0,0,0,0.3);
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+}
+
+/* Sprite */
+.pet-sprite-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.3);
+  border-radius: 20px;
+  padding: 1rem;
+  min-height: 200px;
+  overflow: hidden;
+}
+
+.pet-sprite-container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, var(--pet-glow, transparent) 0%, transparent 70%);
+  opacity: 0.3;
+}
+
+.pet-sprite {
+  height: 160px;
+  width: auto;
+  object-fit: contain;
+  image-rendering: pixelated;
+  animation: petBob 2s ease-in-out infinite;
+  position: relative;
+  z-index: 1;
+  border-radius: 12px;
+}
+
+@keyframes petBob {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-8px) scale(1.02); }
+}
+
+.evolution-hint {
+  position: absolute;
+  bottom: 0.5rem;
+  right: 0.75rem;
+  font-size: 0.45rem;
+  font-family: 'Press Start 2P', monospace;
+  opacity: 0.8;
+  z-index: 1;
+}
+
+/* Stats */
+.pet-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.stat-row, .xp-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.stat-icon { font-size: 1rem; width: 1.5rem; text-align: center; }
+
+.stat-label {
+  font-size: 0.45rem;
+  font-family: 'Press Start 2P', monospace;
+  color: rgba(255,255,255,0.5);
+  min-width: 60px;
+  letter-spacing: 0.05em;
+}
+
+.stat-bar-bg {
+  flex: 1;
+  height: 8px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.stat-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+
+.xp-fill {
+  background: linear-gradient(90deg, #9B59B6, #C39BD3) !important;
+  box-shadow: 0 0 8px rgba(155, 89, 182, 0.5);
+}
+
+.stat-value {
+  font-size: 0.5rem;
+  font-family: 'Press Start 2P', monospace;
+  min-width: 28px;
+  text-align: right;
+}
+
+.xp-val { color: #C39BD3 !important; min-width: 60px; }
+
+.xp-row .stat-icon { visibility: hidden; }
+
+/* Actions */
+.pet-actions {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+}
+
+.action-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.85rem 0.5rem;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 14px;
+  cursor: pointer;
+  color: rgba(255,255,255,0.8);
+  transition: all 0.2s ease;
+}
+
+.action-btn:hover:not(:disabled) {
+  background: rgba(255,255,255,0.1);
+  border-color: var(--btn-color, rgba(255,255,255,0.3));
+  box-shadow: 0 0 20px color-mix(in srgb, var(--btn-color, white) 30%, transparent);
+  transform: translateY(-2px);
+}
+
+.action-btn:active:not(:disabled) { transform: translateY(0); }
+
+.action-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.action-emoji { font-size: 1.5rem; }
+.action-label {
+  font-size: 0.42rem;
+  font-family: 'Press Start 2P', monospace;
+  letter-spacing: 0.05em;
+}
+
+/* Dead State */
+.pet-card--dead {
+  align-items: center;
+  justify-content: center;
+  background: rgba(50, 10, 10, 0.5) !important;
+  border-color: rgba(255, 100, 100, 0.2) !important;
+}
+
+.pet-dead-content {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  font-family: 'Press Start 2P', monospace;
+}
+
+.pet-sprite-dead { font-size: 5rem; animation: shake 0.5s ease-in-out infinite alternate; }
+
+@keyframes shake {
+  from { transform: rotate(-3deg); }
+  to { transform: rotate(3deg); }
+}
+
+.pet-dead-content h2 { font-size: 0.9rem; color: #FF6B6B; margin: 0; }
+.pet-dead-content p  { font-size: 0.5rem; color: rgba(255,255,255,0.5); margin: 0; }
+
+/* Release / Delete */
+.btn-delete, .btn-release {
+  background: transparent;
+  border: 1px solid rgba(255, 107, 107, 0.2);
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  color: rgba(255, 107, 107, 0.5);
+  font-size: 0.45rem;
+  font-family: 'Press Start 2P', monospace;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  align-self: center;
+  letter-spacing: 0.05em;
+}
+
+.btn-delete:hover, .btn-release:hover {
+  background: rgba(255, 107, 107, 0.1);
+  color: #FF6B6B;
+  border-color: rgba(255, 107, 107, 0.5);
+}
