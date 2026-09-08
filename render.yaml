@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: tomagochiweb-api
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python main.py
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: tomagochiweb-db
+          property: connectionString
+      - key: ALLOWED_ORIGINS
+        value: https://your-vercel-app.vercel.app
+
+databases:
+  - name: tomagochiweb-db
+    databaseName: tomagochi
+    plan: free
