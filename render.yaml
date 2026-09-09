@@ -2,9 +2,12 @@ services:
   - type: web
     name: tomagochiweb-api
     runtime: python
+    # Render usa python3 como binario, nunca "python"
     buildCommand: pip install -r requirements.txt
-    startCommand: python main.py
+    startCommand: python3 main.py
     envVars:
+      - key: ENVIRONMENT
+        value: production
       - key: SECRET_KEY
         generateValue: true
       - key: DATABASE_URL

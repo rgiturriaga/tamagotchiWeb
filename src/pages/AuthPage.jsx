@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { login, register } from "../api";
+import { login, register, getMe } from "../api";
 import { useAuth } from "../context/AuthContext";
 import "./AuthPage.css";
 
@@ -22,7 +22,6 @@ export default function AuthPage() {
         await register(form.username, form.email, form.password);
       }
       await login(form.username, form.password);
-      const { getMe } = await import("../api");
       const me = await getMe();
       setUser(me);
     } catch (err) {
