@@ -14,7 +14,7 @@ services:
           name: tomagochiweb-db
           property: connectionString
       - key: ALLOWED_ORIGINS
-        value: https://your-vercel-app.vercel.app
+        value: https://tamagotchi-web.vercel.app
 
 databases:
   - name: tomagochiweb-db
