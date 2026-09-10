@@ -19,12 +19,22 @@ models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="TomagochiWeb API", version="1.0.0")
 
-_raw_origins = os.environ.get("ALLOWED_ORIGINS", "http://localhost:5173,http://127.0.0.1:5173")
-ALLOWED_ORIGINS = [o.strip() for o in _raw_origins.split(",")]
+# Explicit origins from env (comma-separated), plus a regex that covers
+# all Vercel preview/production URLs and Render services automatically.
+_raw_origins = os.environ.get("ALLOWED_ORIGINS", "")
+_explicit_origins = [o.strip() for o in _raw_origins.split(",") if o.strip()]
+
+# Covers: https://*.vercel.app, https://*.onrender.com, http(s)://localhost:*
+_CORS_REGEX = (
+    r"^https?://localhost(:\d+)?$"
+    r"|^https://[\w-]+\.vercel\.app$"
+    r"|^https://[\w-]+\.onrender\.com$"
+)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=ALLOWED_ORIGINS,
+    allow_origins=_explicit_origins or ["http://localhost:5173"],
+    allow_origin_regex=_CORS_REGEX,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
